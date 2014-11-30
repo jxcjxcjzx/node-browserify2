@@ -6,8 +6,10 @@ var browserify = require('browserify');
 var reactify = require('reactify');
 var File = require('vinyl');
 var source = require('vinyl-source-stream');
+var path = require('path');
 
-var dest = gulp.dest('./build/');
+var buildPath = './build/';
+var indexFileName = '__index.js';
 
 var files = {
   'test1': './test1.jsx',
@@ -16,27 +18,27 @@ var files = {
 
 gulp.task('index', function () {
   var indexContent = _.map(files, function (file) {
-    return 'require(\'' + file + '\');';
+    return 'require(\'' + path.resolve(file) + '\');';
   }).join('\n');
 
   var indexFile = new File({
     contents: new Buffer(indexContent)
   });
 
-  indexFile.pipe(source('index.js'))
-    .pipe(dest);
+  return indexFile
+    .pipe(source(indexFileName))
+    .pipe(gulp.dest(buildPath));
 });
 
-gulp.task('default', function () {
-  var bd = browserify({
+gulp.task('default', ['index'], function () {
+  var indexFilePath = path.resolve(buildPath, indexFileName);
+  var opts = {
     debug: true
-  });
+  };
 
-  bd.require('react');
-  bd.require('./test1.jsx', {expose: 'test1'});
-
-  bd.transform(reactify)
+  browserify(indexFilePath, opts)
+    .transform(reactify)
     .bundle()
     .pipe(source('bundle.js'))
-    .pipe(dest);
+    .pipe(gulp.dest(buildPath));
 });

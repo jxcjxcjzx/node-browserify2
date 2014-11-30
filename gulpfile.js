@@ -12,14 +12,20 @@ var buildPath = './build/';
 var indexFileName = '__index.js';
 
 var files = {
+  'react': 'react',
   'test1': './test1.jsx',
   'test2': './test2.jsx'
 };
 
 gulp.task('index', function () {
-  var indexContent = _.map(files, function (file) {
-    return 'require(\'' + path.resolve(file) + '\');';
-  }).join('\n');
+  var indexContent = 'module.exports = {\n';
+
+  indexContent += _.map(files, function (file, alias) {
+    var p = file[0] === '.' ? path.resolve(file) : file;
+    return '  ' + alias + ': require(\'' + p + '\')';
+  }).join(',\n');
+
+  indexContent += '\n};';
 
   var indexFile = new File({
     contents: new Buffer(indexContent)
@@ -31,13 +37,13 @@ gulp.task('index', function () {
 });
 
 gulp.task('default', ['index'], function () {
-  var indexFilePath = path.resolve(buildPath, indexFileName);
-  var opts = {
+  var bd = browserify({
     debug: true
-  };
+  });
 
-  browserify(indexFilePath, opts)
-    .transform(reactify)
+  bd.require(path.resolve(buildPath, indexFileName), {expose: '__index'});
+
+  bd.transform(reactify)
     .bundle()
     .pipe(source('bundle.js'))
     .pipe(gulp.dest(buildPath));

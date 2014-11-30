@@ -8,8 +8,8 @@
   <script src="build/bundle.js"></script>
   <script>
   /* global document */
-  var React = require('react');
-  var Test1 = require('test1');
+  var React = require('__index').react;
+  var Test1 = require('__index').test1;
   React.render(React.createElement(Test1, {name: 'tester'}),
     document.getElementById('container'));
   </script>

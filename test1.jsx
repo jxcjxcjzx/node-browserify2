@@ -6,7 +6,7 @@ var Test1 = React.createClass({
 
   render: function() {
     return (
-      React.createElement('div', null, 'Hello ', this.props.name)
+      <div>Hello {this.props.name}</div>
     );
   }
 

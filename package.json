@@ -1,7 +1,15 @@
 {
   "name": "test1",
-  "main": "index.js",
+  "main": "index.html",
+  "scripts": {
+    "start": "gulp"
+  },
+  "dependencies": {
+    "react": "^0.12.1"
+  },
   "devDependencies": {
-    "browserify": "^6.3.3"
+    "browserify": "^6.3.3",
+    "gulp": "~3.8.10",
+    "vinyl-source-stream": "~1.0.0"
   }
 }

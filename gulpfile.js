@@ -5,7 +5,9 @@ var browserify = require('browserify');
 var source = require('vinyl-source-stream');
 
 gulp.task('default', function () {
-  var bd = browserify('./test1.js');
+  var bd = browserify({
+    debug: true
+  });
 
   bd.require('react');
   bd.require('./test1.js', {expose: 'test1'});

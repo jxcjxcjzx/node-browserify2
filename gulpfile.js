@@ -14,14 +14,16 @@ var indexFileName = '__index.js';
 var files = {
   'react': 'react',
   'test1': './test1.jsx',
-  'test2': './test2.jsx'
+  'test2': './test2.jsx',
+  'test3': './folder1/test3.jsx'
 };
 
 gulp.task('index', function () {
   var indexContent = 'module.exports = {\n';
 
   indexContent += _.map(files, function (file, alias) {
-    var p = file[0] === '.' ? path.resolve(file) : file;
+    // path.resolve expose the real path for the user
+    var p = (file[0] === '.') ? ('../' + file) : file;
     return '  ' + alias + ': require(\'' + p + '\')';
   }).join(',\n');
 

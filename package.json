@@ -12,6 +12,7 @@
     "browserify": "^6.3.3",
     "del": "^1.0.0",
     "gulp": "~3.8.10",
+    "gulp-mocha": "^2.0.0",
     "http-server": "^0.7.3",
     "lodash": "^2.4.1",
     "reactify": "~0.17.1",

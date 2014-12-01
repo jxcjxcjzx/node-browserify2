@@ -8,6 +8,7 @@ var File = require('vinyl');
 var source = require('vinyl-source-stream');
 var path = require('path');
 var del = require('del');
+var mocha = require('gulp-mocha');
 
 var buildPath = './build/';
 var indexFileName = '__index.js';
@@ -56,14 +57,15 @@ gulp.task('browserify', ['index'], function () {
 
   bd.require(path.resolve(buildPath, indexFileName), {expose: '__index'});
 
-  bd.transform(reactify)
+  return bd.transform(reactify)
     .bundle()
     .pipe(source('bundle.js'))
     .pipe(gulp.dest(buildPath));
 });
 
 gulp.task('test', ['browserify'], function () {
-  console.log('TODO: pending to add unit test');
+  return gulp.src('./test/*.js', {read: false})
+    .pipe(mocha({reporter: 'min'}));
 });
 
 gulp.task('default', ['browserify', 'test'], function () {

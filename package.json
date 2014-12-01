@@ -2,14 +2,17 @@
   "name": "test1",
   "main": "index.html",
   "scripts": {
-    "start": "gulp"
+    "test": "gulp",
+    "start": "http-server"
   },
   "dependencies": {
     "react": "^0.12.1"
   },
   "devDependencies": {
     "browserify": "^6.3.3",
+    "del": "^1.0.0",
     "gulp": "~3.8.10",
+    "http-server": "^0.7.3",
     "lodash": "^2.4.1",
     "reactify": "~0.17.1",
     "vinyl": "^0.4.5",

@@ -7,6 +7,7 @@ var reactify = require('reactify');
 var File = require('vinyl');
 var source = require('vinyl-source-stream');
 var path = require('path');
+var del = require('del');
 
 var buildPath = './build/';
 var indexFileName = '__index.js';
@@ -18,7 +19,17 @@ var files = {
   'test3': './folder1/test3.jsx'
 };
 
-gulp.task('index', function () {
+gulp.task('clean', function (done) {
+  del([buildPath + '/*.js'], function (err) {
+    if (err) {
+      throw err;
+    }
+
+    done();
+  });
+});
+
+gulp.task('index', ['clean'], function () {
   var indexContent = 'module.exports = {\n';
 
   indexContent += _.map(files, function (file, alias) {
@@ -38,7 +49,7 @@ gulp.task('index', function () {
     .pipe(gulp.dest(buildPath));
 });
 
-gulp.task('default', ['index'], function () {
+gulp.task('browserify', ['index'], function () {
   var bd = browserify({
     debug: true
   });
@@ -49,4 +60,11 @@ gulp.task('default', ['index'], function () {
     .bundle()
     .pipe(source('bundle.js'))
     .pipe(gulp.dest(buildPath));
+});
+
+gulp.task('test', ['browserify'], function () {
+  console.log('TODO: pending to add unit test');
+});
+
+gulp.task('default', ['browserify', 'test'], function () {
 });

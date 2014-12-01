@@ -5,7 +5,7 @@ bowserify-expose-with-gulp
 [![Dependencies Status][deps-image]][deps-url]
 
 [travis-image]: https://travis-ci.org/lijunle/browserify-expose-with-gulp.png?branch=master "Build Status"
-[travis-url]: https://coveralls.io/r/lijunle/browserify-expose-with-gulp
+[travis-url]: https://travis-ci.org/lijunle/browserify-expose-with-gulp
 [deps-image]: https://david-dm.org/lijunle/browserify-expose-with-gulp.png "Dependencies Status"
 [deps-url]: https://david-dm.org/lijunle/browserify-expose-with-gulp
 

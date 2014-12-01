@@ -2,11 +2,11 @@ bowserify-expose-with-gulp
 ===
 
 [![Build Status][travis-image]][travis-url]
-[![Dependency Status](deps-image)](deps-url)
+[![Dependencies Status][deps-image]][deps-url]
 
-[travis-image]: https://travis-ci.org/lijunle/browserify-expose-with-gulp.png?branch=master
-[coveralls-url]: https://coveralls.io/r/lijunle/browserify-expose-with-gulp
-[deps-image]: https://david-dm.org/lijunle/browserify-expose-with-gulp.png
+[travis-image]: https://travis-ci.org/lijunle/browserify-expose-with-gulp.png?branch=master "Build Status"
+[travis-url]: https://coveralls.io/r/lijunle/browserify-expose-with-gulp
+[deps-image]: https://david-dm.org/lijunle/browserify-expose-with-gulp.png "Dependencies Status"
 [deps-url]: https://david-dm.org/lijunle/browserify-expose-with-gulp
 
 This repo is to demonstrate how to expose browserified packages. As you may know

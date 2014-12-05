@@ -1,23 +1,24 @@
 {
-  "name": "test1",
-  "main": "index.html",
+  "name": "Browserify2",
+  "main": "index.js",
   "scripts": {
-    "test": "gulp",
-    "start": "http-server"
+    "test": "gulp test",
+    "start": "gulp"
   },
   "dependencies": {
-    "react": "^0.12.1"
+    "buffer": "^3.0.1",
+    "lodash": "^2.4.1",
+    "module-deps": "^3.6.1",
+    "process": "^0.10.0",
+    "through2": "^0.6.3",
+    "util": "^0.10.3",
+    "vinyl": "^0.4.5"
   },
   "devDependencies": {
-    "browserify": "^6.3.3",
     "del": "^1.0.0",
     "expect.js": "^0.3.1",
     "gulp": "~3.8.10",
     "gulp-mocha": "^2.0.0",
-    "http-server": "^0.7.3",
-    "lodash": "^2.4.1",
-    "reactify": "~0.17.1",
-    "vinyl": "^0.4.5",
-    "vinyl-source-stream": "~1.0.0"
+    "mocha-silent-reporter": "^1.0.0"
   }
 }

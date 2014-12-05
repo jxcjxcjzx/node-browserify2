@@ -2,23 +2,12 @@
 
 var gulp = require('gulp');
 var _ = require('lodash');
-var browserify = require('browserify');
-var reactify = require('reactify');
-var File = require('vinyl');
-var source = require('vinyl-source-stream');
-var path = require('path');
+var fs = require('fs');
 var del = require('del');
 var mocha = require('gulp-mocha');
+var bundle = require('./');
 
 var buildPath = './build/';
-var indexFileName = '__index.js';
-
-var files = {
-  'react': 'react',
-  'test1': './test1.jsx',
-  'test2': './test2.jsx',
-  'test3': './folder1/test3.jsx'
-};
 
 gulp.task('clean', function (done) {
   del([buildPath + '/*.js'], function (err) {
@@ -30,43 +19,118 @@ gulp.task('clean', function (done) {
   });
 });
 
-gulp.task('index', ['clean'], function () {
-  var indexContent = 'module.exports = {\n';
+var tests = [
+  'basic',
+  'depends-others',
+  'depends-builtins',
+  'depends-complex-hierarchy',
+  'global-variables',
+  {
+    target: 'expose-module',
+    fileName: 'expose-module.js',
+    expose: {
+      'exposeIt': './fixture/expose-module.js'
+    }
+  },
+  {
+    target: 'expose-npm-package',
+    fileName: 'expose-npm-package.js',
+    expose: {
+      'entry': './fixture/expose-npm-package.js',
+      '_': 'lodash'
+    }
+  },
+  {
+    target: 'expose-builtins',
+    fileName: 'expose-builtins.js',
+    expose: {
+      'process': 'process',
+      'util': 'util'
+    }
+  },
+  {
+    target: 'expose-module-with-two-names',
+    fileName: 'expose-module-with-two-names.js',
+    expose: {
+      'entry': './fixture/expose-module-with-two-names.js',
+      'main': './fixture/expose-module-with-two-names.js',
+      'exposed': './fixture/expose-module-with-two-names.js',
+      'util': 'util',
+      'helper': 'util'
+    }
+  },
+  {
+    target: 'require-chains',
+    fileName: 'require-chains.js',
+    expose: {
+      'main': './fixture/require-chains.js',
+      'entry': './fixture/require-chains.js'
+    },
+    deps: ['expose-npm-package']
+  },
+  {
+    target: 'exclude-module',
+    fileName: 'exclude-module.js',
+    exclude: {
+      './fixture/expose-module.js': 'exposeIt'
+    },
+    deps: ['expose-module']
+  },
+];
 
-  indexContent += _.map(files, function (file, alias) {
-    // path.resolve expose the real path for the user
-    var p = (file[0] === '.') ? ('../' + file) : file;
-    return '  ' + alias + ': require(\'' + p + '\')';
-  }).join(',\n');
+_.each(tests, function (test) {
+  // for each test case, there should a JavaScript file in fixture folder,
+  // then generate the corresponding file in build folder,
+  // and last, run unit test file with same name in test folder.
 
-  indexContent += '\n};';
+  var target = _.isObject(test) ? test.target : test;
+  var sourceFile = './fixture/' + target + '.js';
+  var testFile = './test/' + target + '.js';
 
-  var indexFile = new File({
-    contents: new Buffer(indexContent)
+  var checkFixtureTask = 'check-fixture-' + target;
+  var checkTestTask = 'check-test-' + target;
+  var buildTask = 'build-' + target;
+  var testTask = 'test-' + target;
+
+  var deps = _.map(_.isObject(test) && test.deps || [], function (dep) {
+    return 'build-' + dep;
   });
 
-  return indexFile
-    .pipe(source(indexFileName))
-    .pipe(gulp.dest(buildPath));
-});
+  function checkIfFileExists(file) {
+    return function (done) {
+      fs.open(file, 'r', function (err) {
+        if (err) {
+          throw err;
+        }
 
-gulp.task('browserify', ['index'], function () {
-  var bd = browserify({
-    debug: true
+        done();
+      });
+    };
+  }
+
+  gulp.task(checkFixtureTask, ['clean'], checkIfFileExists(sourceFile));
+
+  gulp.task(checkTestTask, ['clean'], checkIfFileExists(testFile));
+
+  gulp.task(buildTask, [checkFixtureTask].concat(deps), function () {
+    return gulp.src(sourceFile)
+      .pipe(bundle(_.isObject(test) ? test : target + '.js'))
+      .pipe(gulp.dest(buildPath));
   });
 
-  bd.require(path.resolve(buildPath, indexFileName), {expose: '__index'});
-
-  return bd.transform(reactify)
-    .bundle()
-    .pipe(source('bundle.js'))
-    .pipe(gulp.dest(buildPath));
+  gulp.task(testTask, [buildTask, checkTestTask], function () {
+    return gulp.src(testFile, {read: false})
+      .pipe(mocha({reporter: 'mocha-silent-reporter'}));
+  });
 });
 
-gulp.task('test', ['browserify'], function () {
-  return gulp.src('./test/*.js', {read: false})
-    .pipe(mocha({reporter: 'min'}));
+gulp.task('test', tests.map(function (test) {
+  var target = _.isObject(test) ? test.target : test;
+  return 'test-' + target;
+}));
+
+gulp.task('build', ['clean'], function () {
+  console.log('TODO: that is nothing to build');
 });
 
-gulp.task('default', ['browserify', 'test'], function () {
-});
+gulp.task('default', ['build', 'test']);

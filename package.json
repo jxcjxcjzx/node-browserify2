@@ -1,9 +1,13 @@
 {
-  "name": "Browserify2",
+  "name": "browserify2",
   "main": "index.js",
   "scripts": {
     "test": "gulp test",
     "start": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/npm/npm.git"
   },
   "dependencies": {
     "buffer": "^3.0.1",
@@ -17,7 +21,7 @@
   "devDependencies": {
     "del": "^1.0.0",
     "expect.js": "^0.3.1",
-    "gulp": "~3.8.10",
+    "gulp": "^3.8.10",
     "gulp-mocha": "^2.0.0",
     "mocha-silent-reporter": "^1.0.0"
   }

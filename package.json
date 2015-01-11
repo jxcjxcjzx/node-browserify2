@@ -1,14 +1,28 @@
 {
   "name": "browserify2",
+  "version": "0.0.1",
+  "description": "Hack the great browserify to work under gulp.",
   "main": "index.js",
+  "license": "MIT",
   "scripts": {
-    "test": "gulp test",
-    "start": "gulp"
+    "test": "gulp test"
+  },
+  "author": {
+    "name": "Junle Li",
+    "email": "lijunle@gmail.com",
+    "url": "https://github.com/lijunle"
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/npm/npm.git"
+    "url": "http://github.com/lijunle/node-browserify2.git"
   },
+  "keywords": [
+    "browser",
+    "browserify",
+    "require",
+    "bundle",
+    "javascript"
+  ],
   "dependencies": {
     "buffer": "^3.0.1",
     "lodash": "^2.4.1",
